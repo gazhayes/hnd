@@ -1,0 +1,122 @@
+<template name="modApplication">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                {{#if isModerator}}
+                <div class="card">
+                    <div class="card-header">
+                        Side-by-side applications {{#each apps}}#{{_id}} {{/each}} {{#if hasNext}}<button class="btn btn-primary btn-sm js-next"><i class="fas fa-angle-right"></i> Next application</button>{{/if}}
+                    </div>
+                    <div class="card-body">
+                        {{#each questions}}
+                        <div class="card shadow">
+                            <div class="card-header">
+                                <h6><a href="" class="text-dark">{{question.label}}</a></h6>
+                            </div>
+                            <div class="card-body row">
+                                {{#each apps}}
+                                <div class="{{#if canVote}}col-sm-6{{else}}col-sm-12{{/if}} p-2 border {{#if winner}}border-success{{else}}border-primary{{/if}} rounded">
+                                {{#if isAnswered answer}}
+                                {{#if canVote}}
+                                {{#unless isDelegated}}
+                                {{#if notRated}}
+                                <a href="#" class="js-vote"><i class="fas fa-check float-right" style="font-size: 26px;color: green;"></i></a>
+                                {{/if}}
+                                {{/unless}}
+                                {{/if}}
+                                {{/if}}
+                                <i class="fas fa-star"></i> {{eloRank}}
+                                <p class="card-text">
+                                    {{answer}}
+                                </p>
+
+                                <div>
+                                    {{#unless isDelegatedTo}} <!-- you can't further delegate the voting, for simplicity -->
+                                        {{#if notRated}}
+                                        {{#unless delegateIntent}}
+                                        {{#if isDelegated}}
+                                        You have delegated this question to {{username delegates.user}}. <br />
+                                        <div class="mt-1 p-1">
+                                            <button class="btn btn-outline-primary btn-sm js-revoke" data-scope="{{_id}}"><i class="fas fa-check"></i> Revoke for this application</button>
+                                            <button class="btn btn-outline-primary btn-sm js-revoke" data-scope="all"><i class="fas fa-clipboard-check"></i> Revoke for all aplications</button>
+                                        </div>
+                                        {{else}}
+                                        <button class="btn btn-outline-primary mt-2 js-delegate float-right"><i class="fas fa-user"></i> Delegate</button>
+                                        {{/if}}
+                                        {{/unless}}
+                                        {{/if}}
+                                    {{else}}
+                                        <br />
+                                        Voting for this question has been delegated to you by:{{#each delegatedFrom}} {{username}}{{/each}}.
+                                    {{/unless}}
+                                    {{#if delegateIntent}}
+                                    <span class="p-1 float-right">
+                                        Delegate this question to
+                                        <select class="js-user-choice-{{question.key}}" style="width: 183px;" name="user">
+                                            {{#each moderators}}
+                                            <option value="{{_id}}">{{username}}</option>
+                                            {{/each}}
+                                        </select>
+                                        <br />
+                                        <button class="btn btn-outline-primary btn-sm js-delegate-question" data-question="{{question.key}}" data-scope="{{_id}}"><i class="fas fa-check"></i> For this application</button>
+                                        <button class="btn btn-outline-primary btn-sm js-delegate-question" data-question="{{question.key}}" data-scope="all"><i class="fas fa-clipboard-check"></i> For all applications</button>
+                                        <button class="btn btn-outline-danger btn-sm js-delegate"><i class="fas fa-times"></i> Cancel</button>
+                                    </span>
+                                    {{/if}}
+                                </div>
+
+                                <div>
+                                    <a href="#" class="btn btn-outline-primary mt-2 comment-new">Ask a question</a>
+                                    {{#if commentCount}}<a href="#" class="btn btn-outline-primary mt-2 comment-show">{{#if showComments}}Hide{{else}}Show{{/if}} comments ({{commentCount}})</a>{{/if}}
+                                </div>
+
+                                {{#if showLine}}<br /><hr>{{/if}}
+
+                                {{#if showReply}}
+                                <div class="row">
+                                    <div class="col-sm-12 news-form">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <textarea class="form-control" id="comments-{{question.key}}-{{_id}}" name="comment" rows="3" placeholder="Markdown is supported..." required></textarea>
+                                                </div>
+
+                                                <p class="text-danger">{{commentInvalidMessage}}</p>
+
+                                                <div class="btn-group" role="group">
+                                                    <div class="btn-group" role="group">
+                                                        {{#if isModerator }} <button type="submit" class="btn btn-outline-primary mb-2 new-comment-moderator">Comment for moderators</button> {{/if}}
+                                                        <button type="submit" class="btn btn-outline-primary mb-2 new-comment">Ask a question</button>
+                                                        <button type="submit" class="btn btn-outline-danger mb-2 cancel-new">Cancel</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/if}}
+
+                                {{#if showComments}}
+                                <div class="row">
+                                    <div class="col-sm-12 news-form comments">
+                                    {{#each comments}}
+                                        {{> commentBody ident=0 comment=this _id=../_id type=type fieldId=../question.key}}
+                                    {{/each}}
+                                    </div>
+                                </div>
+                                {{/if}}   
+                                </div>
+                                {{/each}}
+                            </div>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+                <a class="btn btn-sm btn-secondary" href="/moderator/applications" role="button">Back</a>
+                {{else}}
+                <h1>This page is for moderators only.</h1>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</template>

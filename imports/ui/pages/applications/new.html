@@ -1,0 +1,16 @@
+<template name="newApplication">
+    <div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="card">
+					<div class="card-header">
+						Emurgo Project Appraisal System Form
+					</div>
+					<div class="card-body" style="padding-top: 0;">
+						{{> wizard id="basic-wizard" steps=steps buttonClasses="btn btn-primary" persist="false" clearOnDestroy="true" }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>

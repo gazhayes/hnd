@@ -1,0 +1,102 @@
+<template name="modApplications">
+    <div class="container-fluid">
+        <div class="row">
+
+            
+
+            <div class="col-sm-12">
+                {{#if isModerator}}
+                <div class="card">
+                    <div class="card-header">
+                        Received applications
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control search" placeholder="Type to start searching...">
+                        <div class="float-left">
+                            {{#if filterBy 'in-progress'}}
+                            <input type="checkbox" class="filter" id="in-progress" checked><label for="in-progress" class="btn btn-link p-1"> In progress </label>
+                            {{else}}
+                            <input type="checkbox" class="filter" id="in-progress"><label for="in-progress" class="btn btn-link p-1"> In progress </label>
+                            {{/if}}
+                            {{#if filterBy 'completed'}}
+                            <input type="checkbox" class="filter" id="completed" checked><label for="completed" class="btn btn-link p-1"> Completed </label>
+                            {{else}}
+                            <input type="checkbox" class="filter" id="completed"><label for="completed" class="btn btn-link p-1"> Completed </label>
+                            {{/if}}
+                        </div>
+                        <div class="float-right">
+                            <button class="btn btn-link sort" data-by="num">
+                                Application # {{#if sortBy 'num-desc'}} <i class="fas fa-sort-down"></i> {{else}} {{#if sortBy 'num-asc'}} <i class="fas fa-sort-up"></i> {{/if}} {{/if}}
+                            </button>
+                            <button class="btn btn-link sort" data-by="date">
+                                Date {{#if sortBy 'date-desc'}} <i class="fas fa-sort-down"></i> {{else}} {{#if sortBy 'date-asc'}} <i class="fas fa-sort-up"></i> {{/if}} {{/if}}
+                            </button>
+                            <button class="btn btn-link sort" data-by="weight">
+                                Weight {{#if sortBy 'weight-desc'}} <i class="fas fa-sort-down"></i> {{else}} {{#if sortBy 'weight-asc'}} <i class="fas fa-sort-up"></i> {{/if}} {{/if}}
+                            </button>
+                            <button class="btn btn-link sort" data-by="status">
+                                Status {{#if sortBy 'status-desc'}} <i class="fas fa-sort-down"></i> {{else}} {{#if sortBy 'status-asc'}} <i class="fas fa-sort-up"></i> {{/if}} {{/if}}
+                            </button>
+                            <button class="btn btn-link sort" data-by="elo">
+                                ELO {{#if sortBy 'elo-desc'}} <i class="fas fa-sort-down"></i> {{else}} {{#if sortBy 'elo-asc'}} <i class="fas fa-sort-up"></i> {{/if}} {{/if}}
+                            </button>
+                        </div>
+                        <br />
+                        {{#if formProgress.length}}
+                            <table class="table table-responsive-sm table-hover table-outline mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Author</th>
+                                            <th>Created</th>
+                                            <th>Updated</th>
+                                            <th>ELO</th>
+                                            <th>Weight</th>
+                                            <th>Weight Distribution</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each formProgress}}
+                                        <tr class="documents-index-item">
+                                            <!-- Check for old entiries which doesn't kave form_id -->
+                                            <td scope="row">{{#if id}} {{id}} {{else}} {{_id}} {{/if}}</td>
+                                            <td scope="row">{{author createdBy}}</td>
+                                            <td scope="row">{{formatDate createdAt}}</td>
+                                            <td scope="row">{{formatDate progress.updated_at}}</td>
+                                            <td scope="row">{{eloRanking}}</td>
+                                            <td scope="row"><i class="fas fa-circle" style="color:{{applicationWeight.color}}" data-toggle="tooltip" data-placement="right" title="{{applicationWeight.data}}"></i></td>
+                                            <td scope="row">
+                                                {{chart}}
+                                                <canvas id="{{_id}}_chart" width="100" height="50"></canvas></td>
+                                                
+                                            <td scope="row">
+                                                {{#if isInProgress progress.status}}
+                                                    <i title="In progress" class="icon-clock"></i>
+                                                {{else}}
+                                                    <span class="badge badge-success">completed</span>
+                                                {{/if}}
+                                            </td>
+                                            <td scope="row">
+                                                <a class="btn btn-sm btn-secondary" href="/moderator/application/{{_id}}" role="button">View</a>
+                                            </td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                            {{else}}
+                                <div class="mt-3 text-center">
+                                    <h2>No applications received</h2>
+                                </div>
+                            {{/if}}        
+                        
+                    </div>
+                </div>
+                {{else}}
+                <h1>This page is for moderators only.</h1>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</template>

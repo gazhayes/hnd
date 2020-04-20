@@ -1,0 +1,44 @@
+<template name="sidebar">
+  <div class="sidebar">
+    <nav class="sidebar-nav">
+      <ul class="nav">
+        {{#if isModerator}}
+          <li class="nav-item">
+            <a class="nav-link" href="/moderator/applications">
+              <i class="nav-icon icon-speedometer"></i> Manage applications
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/moderator/users">
+              <i class="nav-icon icon-people"></i> Manage users
+            </a>
+          </li>
+        {{else}}
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="nav-icon icon-speedometer"></i> Dashboard
+            </a>
+          </li>
+          {{#unless isTeamMember true}}
+            <li class="nav-item">
+              <a class="nav-link new-application" href="#">
+                <i class="nav-icon icon-docs"></i> New Application
+              </a>
+            </li>
+          {{/unless}}
+          <li class="nav-item">
+            <a class="nav-link" href="/userInfo">
+              <i class="nav-icon icon-user"></i> User Information
+            </a>
+          </li>
+        {{/if}}
+        <li class="nav-item">
+            <a class="nav-link" href="/contact">
+                <i class="nav-icon icon-user"></i> Contact
+            </a>
+        </li>
+      </ul>
+    </nav>
+    <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+  </div>
+</template>
