@@ -20,7 +20,7 @@
     "country-list": "^1.1.1",
     "fibers": "^1.0.15",
     "flag-icon-css": "3.0.0",
-    "jquery": "3.4.0",
+    "jquery": "3.5.0",
     "marked": "^0.8.2",
     "meteor-node-stubs": "^0.3.2",
     "moment": "^2.24.0",
